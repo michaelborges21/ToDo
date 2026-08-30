@@ -6,11 +6,11 @@ readme = "README.md"
 authors = [
     { name = "Michael Borges", email = "michaelborges21@gmail.com" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = []
 
 [project.scripts]
-todo = "todo:main"
+todo = "todo.main:main" # aponta para o arquivo main.py dentro de todo
 
 [build-system]
 requires = ["uv_build>=0.12.7,<0.13.0"]

@@ -268,3 +268,39 @@ source ~/.zshrc
 which uv        # não deve retornar nada
 uv --version    # deve dar "command not found"
 ```
+
+## 12. Conflito de Ambiente Virtual Local vs Global (uv run com warning)
+
+**O Problema (Como estava antes):**
+Ao executar `uv run main.py` (ou qualquer script `uv run`), o terminal exibia o seguinte aviso:
+`warning: VIRTUAL_ENV=/home/mborges/.venvs/ToDo does not match the project environment path /mnt/LWH/learning/proj/personal_proj/ToDo/.venv and will be ignored...`
+
+**Motivo de estar assim:** 
+Os arquivos de configuração do projeto (`pyproject.toml` e `.python-version`) estavam definidos para exigir a versão do Python `>=3.13`. Quando o `uv` foi executado na pasta, ele detectou essa exigência e criou automaticamente um diretório `.venv` local com o Python 3.13 para o projeto. No entanto, o usuário já tinha o ambiente virtual `~/.venvs/ToDo` (com Python 3.12) ativado no terminal. O `uv` é programado para priorizar o `.venv` local do projeto, ignorando o ambiente ativado externamente. Isso gerava o conflito de versões e caminhos, emitindo o aviso.
+
+**A Solução Proposta:**
+A melhor forma de integrar o `uv` a um fluxo que utiliza ambientes centralizados (como `~/.venvs/ToDo`), mantendo o projeto na versão correta (Python 3.12) e sem precisar digitar a flag `--active` a cada comando, é através de um **link simbólico** (atalho).
+A ideia é:
+1. Ajustar o projeto para exigir o Python 3.12.
+2. Apagar o `.venv` local incorreto (3.13).
+3. Criar um atalho chamado `.venv` na raiz do projeto que aponte diretamente para `~/.venvs/ToDo`. 
+Desta forma, quando o `uv` buscar pelo ambiente local na pasta `.venv`, ele será redirecionado de forma totalmente transparente para o ambiente centralizado correto.
+
+**Passo a passo da execução:**
+
+1. **Alterar a versão do Python nos arquivos do projeto:**
+   - Edite o arquivo `pyproject.toml` e altere a linha `requires-python = ">=3.13"` para `requires-python = ">=3.12"`.
+   - Edite o arquivo `.python-version` e altere o conteúdo de `3.13` para `3.12`.
+
+2. **Remover o ambiente virtual conflitante do projeto:**
+   ```bash
+   rm -rf .venv
+   ```
+
+3. **Criar o link simbólico para o ambiente desejado:**
+   Estando na raiz do projeto, execute o comando abaixo para apontar o `.venv` do projeto para o seu ambiente centralizado:
+   ```bash
+   ln -s ~/.venvs/ToDo .venv
+   ```
+
+Com essas alterações, execuções de comandos `uv` (como `uv run`, `uv add`, etc.) rodarão perfeitamente e diretamente dentro de `~/.venvs/ToDo` utilizando o Python 3.12, sem nenhum conflito ou aviso no terminal.
