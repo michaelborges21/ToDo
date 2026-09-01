@@ -1,6 +1,6 @@
-import os
+# import os
 import uuid
-from os import system
+import subprocess
 
 # Dicionário para armazenar as tarefas em memória (ID -> Tarefa)
 tarefas = {}
@@ -14,6 +14,7 @@ def add_task():
             "concluida": False
         }
         tarefas[task_id] = nova_tarefa
+
         print("✅ Tarefa adicionada com sucesso!\n")
     else:
         print("❌ A descrição não pode ser vazia.\n")
@@ -30,11 +31,27 @@ def complet_toggle_task():
             return
             
         indice = escolha - 1
+        # Verifica se o índice digitado é válido e está dentro da quantidade de tarefas
         if 0 <= indice < len(tarefas):
+
+            # Por que usar list(tarefas.keys())?
+            # 'tarefas' é um dicionário e .keys() não permite acessar um item pela sua posição numérica.
+            # Por isso foi convertido  para list(), permitindo buscar a chave exata através do '[indice]'.
+            
             task_id = list(tarefas.keys())[indice]
+            
+            # Acessa os dados da tarefa no dicionário usando o id encontrado
             tarefa = tarefas[task_id]
+            
+            # Inverte o estado de conclusão (se estava pendente, conclui; se concluída, deixa pendente)
             tarefa["concluida"] = not tarefa["concluida"]
-            status = "concluída" if tarefa["concluida"] else "pendente"
+            
+            # Define qual será a palavra exibida com base no novo estado
+            if tarefa["concluida"]:
+                status = "concluída"
+            else:
+                status = "pendente"
+                
             print(f"🔄 Tarefa atualizada para: {status}!\n")
         else:
             print("❌ Número de tarefa inválido.\n")
@@ -68,7 +85,10 @@ def list_all_task():
         print("Nenhuma tarefa encontrada.")
     else:
         for indice, (task_id, tarefa) in enumerate(tarefas.items(), start=1):
-            status = "[X]" if tarefa["concluida"] else "[ ]"
+            if tarefa["concluida"]:
+                status = "[X]"
+            else:
+                status = "[ ]"
             print(f"{indice}. {status} {tarefa['descricao']}")
     print("-" * 20)
 
@@ -90,13 +110,16 @@ def menu():
         match opcao:
             case "1":
                 add_task()
-                system("clear")
+                subprocess.run(["clear"])
             case "2":
                 complet_toggle_task()
+                subprocess.run(["clear"])
             case "3":
                 remove_task()
+                subprocess.run(["clear"])
             case "4":
                 list_all_task()
+                subprocess.run(["clear"])
             case "0":
                 print("Saindo do aplicativo. Até mais!")
                 break
