@@ -1,5 +1,6 @@
 import uuid
 import subprocess
+from datetime import datetime
 
 # Dicionário para armazenar as tarefas em memória (ID -> Tarefa)
 tarefas = {}
@@ -7,17 +8,32 @@ tarefas = {}
 def add_task():
     descricao = input("\nDigite a descrição da tarefa: ").strip()
     if descricao:
+        print("Prioridade da tarefa:")
+        print(" 1. ALTA")
+        print(" 2. MEDIA")
+        print(" 3. BAIXA")
+        pri_escolha = input(" Escolha a prioridade (1-3) [Padrão: MEDIA]: ").strip()
+        
+        if pri_escolha == "1":
+            prioridade = "ALTA"
+        elif pri_escolha == "3":
+            prioridade = "BAIXA"
+        else:
+            prioridade = "MEDIA"
+            
         task_id = str(uuid.uuid4())
         nova_tarefa = {
             "descricao": descricao,
-            "concluida": False
+            "concluida": False,
+            "data_criacao": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "prioridade": prioridade
         }
         tarefas[task_id] = nova_tarefa
         print("✅ Tarefa adicionada com sucesso!\n")
     else:
         print("❌ A descrição não pode ser vazia.\n")
 
-def complet_toggle_task():
+def edit_task():
     list_all_task()
     if not tarefas:
         return
@@ -88,7 +104,8 @@ def list_all_task():
                 status = "[X]"
             else:
                 status = "[ ]"
-            print(f"{indice}. {status} {tarefa['descricao']}")
+            prioridade = tarefa.get("prioridade", "N/A")
+            print(f"{indice}. {status} {tarefa['descricao']} [{prioridade}]")
     print("-" * 20)
 
 
@@ -99,9 +116,9 @@ def menu():
         print(" " * 12 + "TO-DO LIST")
         print("=" * 40)
         print(" 1. Adicionar Nova Tarefa")
-        print(" 2. Concluir/Alternar Tarefa")
-        print(" 3. Remover Tarefa")
-        print(" 4. Listar Tarefas")
+        print(" 2. Concluir/Alterar Tarefa")
+        print(" 3. Listar Tarefas")
+        print(" 4. Remover Tarefa")
         print(" 0. Sair do Aplicativo")
         print("=" * 40)
 
@@ -111,11 +128,11 @@ def menu():
             case "1":
                 add_task()
             case "2":
-                complet_toggle_task()
+                edit_task()
             case "3":
-                remove_task()
-            case "4":
                 list_all_task()
+            case "4":
+                remove_task()
             case "0":
                 print("Saindo do aplicativo. Até mais!")
                 break
