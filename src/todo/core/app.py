@@ -105,7 +105,8 @@ def list_all_task():
             else:
                 status = "[ ]"
             prioridade = tarefa.get("prioridade", "N/A")
-            print(f"{indice}. {status} {tarefa['descricao']} [{prioridade}]")
+            data_criacao = tarefa.get("data_criacao", "N/D")
+            print(f"{indice}. {status} {tarefa['descricao']} | Prioridade: {prioridade} | Criada em: {data_criacao}")
     print("-" * 20)
 
 
@@ -116,7 +117,7 @@ def menu():
         print(" " * 12 + "TO-DO LIST")
         print("=" * 40)
         print(" 1. Adicionar Nova Tarefa")
-        print(" 2. Concluir/Alterar Tarefa")
+        print(" 2. Alterar Tarefa")
         print(" 3. Listar Tarefas")
         print(" 4. Remover Tarefa")
         print(" 0. Sair do Aplicativo")
