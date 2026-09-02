@@ -12,14 +12,14 @@ def add_task():
         print(" 1. ALTA")
         print(" 2. MEDIA")
         print(" 3. BAIXA")
-        pri_escolha = input(" Escolha a prioridade (1-3) [Padrão: MEDIA]: ").strip()
+        pri_escolha = input(" Escolha a prioridade (1-3): ").strip()
         
         if pri_escolha == "1":
             prioridade = "ALTA"
-        elif pri_escolha == "3":
-            prioridade = "BAIXA"
-        else:
+        elif pri_escolha == "2":
             prioridade = "MEDIA"
+        else:
+            prioridade = "BAIXA"
             
         task_id = str(uuid.uuid4())
         nova_tarefa = {
