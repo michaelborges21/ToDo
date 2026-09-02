@@ -106,7 +106,7 @@ def list_all_task():
                 status = "[ ]"
             prioridade = tarefa.get("prioridade", "N/A")
             data_criacao = tarefa.get("data_criacao", "N/D")
-            print(f"{indice}. {status} {tarefa['descricao']} | Prioridade: {prioridade} | Criada em: {data_criacao}")
+            print(f"{indice} - {status} {tarefa['descricao']} | Prioridade: {prioridade} | Criada em: {data_criacao}")
     print("-" * 20)
 
 

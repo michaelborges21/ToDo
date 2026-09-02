@@ -105,9 +105,3 @@ Desktop.ini
 # =========================
 *.log
 *.sqlite3
-
-# =========================
-# Ferramentas de IA / Outros
-# =========================
-.claude/
-.gemini/
