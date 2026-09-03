@@ -6,6 +6,7 @@ from datetime import datetime
 tarefas = {}
 
 def add_task():
+    subprocess.run(["clear"])
     descricao = input("\nDigite a descrição da tarefa: ").strip()
     if descricao:
         print("Prioridade da tarefa:")
@@ -34,6 +35,7 @@ def add_task():
         print("❌ A descrição não pode ser vazia.\n")
 
 def edit_task():
+    subprocess.run(["clear"])
     list_all_task()
     if not tarefas:
         return
@@ -74,6 +76,7 @@ def edit_task():
         print("❌ Por favor, digite um número válido.\n")
 
 def remove_task():
+    subprocess.run(["clear"])
     list_all_task()
     if not tarefas:
         return
@@ -95,6 +98,7 @@ def remove_task():
         print("❌ Por favor, digite um número válido.\n")
 
 def list_all_task():
+    subprocess.run(["clear"])
     print("\n--- Suas Tarefas ---")
     if not tarefas:
         print("Nenhuma tarefa encontrada.")
@@ -128,12 +132,16 @@ def menu():
         match opcao:
             case "1":
                 add_task()
+                subprocess.run(["clear"])
             case "2":
                 edit_task()
+                subprocess.run(["clear"])
             case "3":
                 list_all_task()
+                subprocess.run(["clear"])
             case "4":
                 remove_task()
+                subprocess.run(["clear"])
             case "0":
                 print("Saindo do aplicativo. Até mais!")
                 break
