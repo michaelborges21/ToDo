@@ -55,7 +55,6 @@ def edit_task():
             # Por isso foi convertido  para list(), permitindo buscar a chave exata através do '[indice]'.
             
             task_id = list(tarefas.keys())[indice]
-            print(task_id )
             
             # Acessa os dados da tarefa no dicionário usando o id encontrado
             tarefa = tarefas[task_id]
@@ -102,22 +101,18 @@ def list_all_task():
     subprocess.run(["clear"])
     print("\n--- Suas Tarefas ---")
     if not tarefas:
-        print("Nenhuma tarefa encontrada.")
-    else:
-        for indice, (task_id, tarefa) in enumerate(tarefas.items(), start=1):
-            if tarefa["concluida"]:
-                status = "[X]"
-            else:
-                status = "[ ]"
-            titulo = tarefa.get("titulo", tarefa.get("descricao", "Sem título"))
-            desc = tarefa.get("descricao", "")
-            prioridade = tarefa.get("prioridade", "N/A")
-            data_criacao = tarefa.get("data_criacao", "N/D")
-            
-            linha = f"{indice} - {status} {titulo} | Prioridade: {prioridade} | Criada em: {data_criacao}"
-            if desc and desc != titulo:
-                linha += f"\n    Descrição: {desc}"
-            print(linha)
+        print("Nenhuma tarefa encontrada.\n" + "-" * 20)
+        return
+
+    for indice, tarefa in enumerate(tarefas.values(), start=1):
+        status = "[X]" if tarefa.get("concluida") else "[ ]"
+        titulo = tarefa.get("titulo", "Sem título")
+        prioridade = tarefa.get("prioridade", "N/A")
+        data = tarefa.get("data_criacao", "N/D")
+
+        print(f"{indice} - {status} {titulo} | Prioridade: {prioridade} | Criada em: {data}")
+        if desc := tarefa.get("descricao"):
+            print(f"    Descrição: {desc}")
     print("-" * 20)
 
 
@@ -139,16 +134,12 @@ def menu():
         match opcao:
             case "1":
                 add_task()
-                subprocess.run(["clear"])
             case "2":
                 edit_task()
-                subprocess.run(["clear"])
             case "3":
                 list_all_task()
-                subprocess.run(["clear"])
             case "4":
                 remove_task()
-                subprocess.run(["clear"])
             case "0":
                 print("Saindo do aplicativo. Até mais!")
                 break
