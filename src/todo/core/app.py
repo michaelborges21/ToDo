@@ -7,23 +7,23 @@ tarefas = {}
 
 def add_task():
     subprocess.run(["clear"])
-    descricao = input("\nDigite a descrição da tarefa: ").strip()
-    if descricao:
-        print("Prioridade da tarefa:")
-        print(" 1. ALTA")
-        print(" 2. MEDIA")
-        print(" 3. BAIXA")
-        pri_escolha = input(" Escolha a prioridade (1-3): ").strip()
+    titulo = input("\nDigite o título da tarefa: ").strip()
+    if titulo:
+        descricao = input("Digite a descrição da tarefa: ").strip()
+        menu = """Escolha a prioridade:
+    1 - ALTA
+    2 - MÉDIA
+    3 - BAIXA
+    Faça sua escolha: """
         
-        if pri_escolha == "1":
-            prioridade = "ALTA"
-        elif pri_escolha == "2":
-            prioridade = "MEDIA"
-        else:
-            prioridade = "BAIXA"
+        pri_escolha = input(menu).strip()
+
+        prioridades = ("ALTA", "MEDIA", "BAIXA")
+        prioridade = prioridades[int(pri_escolha) - 1] if pri_escolha in ("1", "2", "3") else "BAIXA"
             
         task_id = str(uuid.uuid4())
         nova_tarefa = {
+            "titulo": titulo,
             "descricao": descricao,
             "concluida": False,
             "data_criacao": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -32,7 +32,7 @@ def add_task():
         tarefas[task_id] = nova_tarefa
         print("✅ Tarefa adicionada com sucesso!\n")
     else:
-        print("❌ A descrição não pode ser vazia.\n")
+        print("❌ O título não pode ser vazio.\n")
 
 def edit_task():
     subprocess.run(["clear"])
@@ -91,7 +91,8 @@ def remove_task():
         if 0 <= indice < len(tarefas):
             task_id = list(tarefas.keys())[indice]
             tarefa_removida = tarefas.pop(task_id)
-            print(f"🗑️  Tarefa '{tarefa_removida['descricao']}' removida com sucesso!\n")
+            nome_tarefa = tarefa_removida.get("titulo", tarefa_removida.get("descricao", "Sem título"))
+            print(f"🗑️  Tarefa '{nome_tarefa}' removida com sucesso!\n")
         else:
             print("❌ Número de tarefa inválido.\n")
     except ValueError:
@@ -108,9 +109,15 @@ def list_all_task():
                 status = "[X]"
             else:
                 status = "[ ]"
+            titulo = tarefa.get("titulo", tarefa.get("descricao", "Sem título"))
+            desc = tarefa.get("descricao", "")
             prioridade = tarefa.get("prioridade", "N/A")
             data_criacao = tarefa.get("data_criacao", "N/D")
-            print(f"{indice} - {status} {tarefa['descricao']} | Prioridade: {prioridade} | Criada em: {data_criacao}")
+            
+            linha = f"{indice} - {status} {titulo} | Prioridade: {prioridade} | Criada em: {data_criacao}"
+            if desc and desc != titulo:
+                linha += f"\n    Descrição: {desc}"
+            print(linha)
     print("-" * 20)
 
 
